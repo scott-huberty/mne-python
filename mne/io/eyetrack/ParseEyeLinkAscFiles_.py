@@ -134,8 +134,15 @@ def ParseEyeLinkAsc_(elFilename):
     # Blinks
     print('Parsing blinks...')
     iNotEblink = np.nonzero(lineType != 'EBLINK')[0]
-    dfBlink = pd.read_csv(elFilename, skiprows=iNotEblink, header=None,
-                          delim_whitespace=True, usecols=range(1, 5))
+    try:
+        dfBlink = pd.read_csv(elFilename, skiprows=iNotEblink, header=None,
+                            delim_whitespace=True, usecols=range(1, 5))
+    except ValueError as this_error:
+        if str(this_error) == 'No columns to parse from file':
+             print('No blinks in file')
+             dfBlink = pd.DataFrame(columns=['eye','tStart','tEnd','duration'])
+        else:
+            raise
     dfBlink.columns = ['eye', 'tStart', 'tEnd', 'duration']
     print('Done! Took %f seconds.' % (time.time() - t))
 
