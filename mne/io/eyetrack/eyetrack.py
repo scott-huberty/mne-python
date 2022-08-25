@@ -66,8 +66,8 @@ class RawEyelink(BaseRaw):
         logger.info('Loading {}'.format(fname))
 
         # load data
-        ftype = fname.split('.')[-1]
-        if ftype == 'asc':
+        #ftype = fname.split('.')[-1]
+        if Path(fname).suffix() == 'asc':
             sfreq = 500
             eye = 'BINO'
             pos = True
@@ -81,11 +81,9 @@ class RawEyelink(BaseRaw):
                     pos=pos,
                     pupil=pupil,
                     read_eye_events=read_eye_events)
-        elif ftype == 'edf':
-            raise NotImplementedError('Eyelink .edf files not supported, yet')
         else:
             raise ValueError(
-                'This reader can only read eyelink .asc (or .edf) files. '
+                'This reader can only read eyelink .asc files. '
                 'Got .{} instead'.format(ftype))
 
         # create mne object
@@ -105,37 +103,16 @@ class RawEyelink(BaseRaw):
 
     def _parse_eyelink_asc(self, fname, sfreq, eye='BINO', pos=True,
                            pupil=True, read_eye_events=True):
-        from .ParseEyeLinkAscFiles_ import ParseEyeLinkAsc_
+        from .ParseEyeLinkAscFiles_ import ParseEyeLinkAsc_, _read_asc_header
         import datetime as dt
 
         # read the header (to extract relevant information)
-        with open(fname, 'r') as f:
-            d_header = []
-            for l in f.readlines()[:100]:  # restrict to first 100 lines
-                d_header.append(l) if ('**' in l) else None
-
-        for l in d_header:
-            if 'DATE:' in l:
-                datetime_str = l.strip('\n').split('DATE: ')[-1]
-            # we can get more, e.g. camera settings
-            if 'CAMERA:' in l:
-                cam = l.strip('\n').split('CAMERA: ')[-1]
-
-        meas_date = None
-        if 'datetime_str' in locals():
-            meas_date = dt.datetime.strptime(datetime_str,
-                                             '%a %b %d %H:%M:%S %Y')
-            meas_date = meas_date.replace(tzinfo=dt.timezone.utc)
-
-        if meas_date is None:
-            warn("Extraction of measurement date from asc file failed. "
-                 "Please report this as a github issue. "
-                 "The date is being set to January 1st, 2000, ")
-            meas_date = dt.datetime(2000, 1, 1, 0, 0, 0,
-                                    tzinfo=dt.timezone.utc)
+        hdr_info = _read_asc_header(fname)
+        meas_date = datetime.strptime(hdr_info['DATE'], '%a %b %d %H:%M:%S %Y')
+        camera = hdr_info['CAMERA']
 
         # set parameter
-        ch_names = []
+       '''ch_names = []
         if pos:
             ch_names.append('X')
             ch_names.append('Y')
@@ -148,7 +125,7 @@ class RawEyelink(BaseRaw):
         elif eye == 'BINO':
             ch_names = [['R' + ch, 'L' + ch] for ch in ch_names]
             ch_names = [x for xs in ch_names for x in xs]
-        ch_names.sort()
+        ch_names.sort()''';
 
         n_chan = len(ch_names)
         ch_types = ['eyetrack'] * n_chan  # ch_types = ['eyetrack'] * n_chan
@@ -175,8 +152,7 @@ class RawEyelink(BaseRaw):
             info['chs'][i_ch]['unit'] = unit
 
         # load data
-        df_recalibration, df_msg, df_fix, df_sacc, df_blink, df_samples = \
-            ParseEyeLinkAsc_(fname)
+        samples, events = ParseEyeLinkAsc_(fname)
 
         # clean out misread data
         # assert tSample > 0
