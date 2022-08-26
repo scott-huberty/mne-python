@@ -112,7 +112,7 @@ class RawEyelink(BaseRaw):
         camera = hdr_info['CAMERA']
 
         # set parameter
-       '''ch_names = []
+        ch_names = []
         if pos:
             ch_names.append('X')
             ch_names.append('Y')
@@ -125,7 +125,7 @@ class RawEyelink(BaseRaw):
         elif eye == 'BINO':
             ch_names = [['R' + ch, 'L' + ch] for ch in ch_names]
             ch_names = [x for xs in ch_names for x in xs]
-        ch_names.sort()''';
+        ch_names.sort()
 
         n_chan = len(ch_names)
         ch_types = ['eyetrack'] * n_chan  # ch_types = ['eyetrack'] * n_chan
