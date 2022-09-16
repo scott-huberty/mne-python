@@ -595,13 +595,80 @@ class UpdateChannelsMixin(object):
                    resp=False, chpi=False, exci=False, ias=False, syst=False,
                    seeg=False, dipole=False, gof=False, bio=False,
                    ecog=False, fnirs=False, csd=False, dbs=False,
+<<<<<<< HEAD
                    temperature=False, gsr=False,
+=======
+                   eyetrack=False,
+>>>>>>> 915416c09 (add eyetrack also to the  instance.pick_types() method)
                    include=(), exclude='bads', selection=None, verbose=None):
         """Pick some channels by type and names.
 
         Parameters
         ----------
+<<<<<<< HEAD
         %(pick_types_params)s
+=======
+        meg : bool | str
+            If True include MEG channels. If string it can be 'mag', 'grad',
+            'planar1' or 'planar2' to select only magnetometers, all
+            gradiometers, or a specific type of gradiometer.
+        eeg : bool
+            If True include EEG channels.
+        stim : bool
+            If True include stimulus channels.
+        eog : bool
+            If True include EOG channels.
+        ecg : bool
+            If True include ECG channels.
+        emg : bool
+            If True include EMG channels.
+        ref_meg : bool | str
+            If True include CTF / 4D reference channels. If 'auto', reference
+            channels are included if compensations are present and ``meg`` is
+            not False. Can also be the string options for the ``meg``
+            parameter.
+        misc : bool
+            If True include miscellaneous analog channels.
+        resp : bool
+            If ``True`` include respiratory channels.
+        chpi : bool
+            If True include continuous HPI coil channels.
+        exci : bool
+            Flux excitation channel used to be a stimulus channel.
+        ias : bool
+            Internal Active Shielding data (maybe on Triux only).
+        syst : bool
+            System status channel information (on Triux systems only).
+        seeg : bool
+            Stereotactic EEG channels.
+        dipole : bool
+            Dipole time course channels.
+        gof : bool
+            Dipole goodness of fit channels.
+        bio : bool
+            Bio channels.
+        ecog : bool
+            Electrocorticography channels.
+        fnirs : bool | str
+            Functional near-infrared spectroscopy channels. If True include all
+            fNIRS channels. If False (default) include none. If string it can
+            be 'hbo' (to include channels measuring oxyhemoglobin) or 'hbr' (to
+            include channels measuring deoxyhemoglobin).
+        csd : bool
+            EEG-CSD channels.
+        dbs : bool
+            Deep brain stimulation channels.
+        eyetrack : bool
+            Eye-tracking channels.
+        include : list of str
+            List of additional channels to include. If empty do not include
+            any.
+        exclude : list of str | str
+            List of channels to exclude. If 'bads' (default), exclude channels
+            in ``info['bads']``.
+        selection : list of str
+            Restrict sensor channels (MEG, EEG) to this list of channel names.
+>>>>>>> 915416c09 (add eyetrack also to the  instance.pick_types() method)
         %(verbose)s
 
         Returns
@@ -621,9 +688,14 @@ class UpdateChannelsMixin(object):
             self.info, meg=meg, eeg=eeg, stim=stim, eog=eog, ecg=ecg, emg=emg,
             ref_meg=ref_meg, misc=misc, resp=resp, chpi=chpi, exci=exci,
             ias=ias, syst=syst, seeg=seeg, dipole=dipole, gof=gof, bio=bio,
+<<<<<<< HEAD
             ecog=ecog, fnirs=fnirs, csd=csd, dbs=dbs, include=include,
             exclude=exclude, selection=selection, temperature=temperature,
             gsr=gsr)
+=======
+            ecog=ecog, fnirs=fnirs, csd=csd, dbs=dbs, eyetrack=eyetrack,
+            include=include, exclude=exclude, selection=selection)
+>>>>>>> 915416c09 (add eyetrack also to the  instance.pick_types() method)
 
         self._pick_drop_channels(idx)
 

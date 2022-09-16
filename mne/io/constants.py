@@ -204,6 +204,8 @@ FIFF.FIFFV_GOODNESS_FIT = 1001  # Goodness of fit (xplotter/xfit)
 FIFF.FIFFV_FNIRS_CH     = 1100  # Functional near-infrared spectroscopy
 FIFF.FIFFV_TEMPERATURE_CH = 1200  # Functional near-infrared spectroscopy
 FIFF.FIFFV_GALVANIC_CH  = 1300  # Galvanic skin response
+FIFF.FIFFV_EYETRACK_CH  = 1400  # Eye-tracking
+
 _ch_kind_named = {key: key for key in (
     FIFF.FIFFV_BIO_CH,
     FIFF.FIFFV_MEG_CH,
@@ -227,6 +229,7 @@ _ch_kind_named = {key: key for key in (
     FIFF.FIFFV_FNIRS_CH,
     FIFF.FIFFV_GALVANIC_CH,
     FIFF.FIFFV_TEMPERATURE_CH,
+    FIFF.FIFFV_EYETRACK_CH,
 )}
 
 #
@@ -917,6 +920,9 @@ FIFF.FIFFV_COIL_FNIRS_FD_AC_AMPLITUDE = 304  # fNIRS frequency domain AC amplitu
 FIFF.FIFFV_COIL_FNIRS_FD_PHASE        = 305  # fNIRS frequency domain phase
 FIFF.FIFFV_COIL_FNIRS_RAW = FIFF.FIFFV_COIL_FNIRS_CW_AMPLITUDE  # old alias
 
+FIFF.FIFFV_COIL_EYETRACK_POS = 400       # Eye-tracking gaze position
+FIFF.FIFFV_COIL_EYETRACK_PUPIL = 401     # Eye-tracking pupil size
+
 FIFF.FIFFV_COIL_MCG_42             = 1000  # For testing the MCG software
 
 FIFF.FIFFV_COIL_POINT_MAGNETOMETER   = 2000  # Simple point magnetometer
@@ -1003,6 +1009,7 @@ _ch_coil_type_named = {key: key for key in (
     FIFF.FIFFV_COIL_FNIRS_HBR, FIFF.FIFFV_COIL_FNIRS_RAW,
     FIFF.FIFFV_COIL_FNIRS_OD, FIFF.FIFFV_COIL_FNIRS_FD_AC_AMPLITUDE,
     FIFF.FIFFV_COIL_FNIRS_FD_PHASE, FIFF.FIFFV_COIL_MCG_42,
+    FIFF.FIFFV_COIL_EYETRACK_POS, FIFF.FIFFV_COIL_EYETRACK_PUPIL,
     FIFF.FIFFV_COIL_POINT_MAGNETOMETER, FIFF.FIFFV_COIL_AXIAL_GRAD_5CM,
     FIFF.FIFFV_COIL_VV_PLANAR_W, FIFF.FIFFV_COIL_VV_PLANAR_T1,
     FIFF.FIFFV_COIL_VV_PLANAR_T2, FIFF.FIFFV_COIL_VV_PLANAR_T3,
