@@ -595,7 +595,7 @@ class UpdateChannelsMixin(object):
                    resp=False, chpi=False, exci=False, ias=False, syst=False,
                    seeg=False, dipole=False, gof=False, bio=False,
                    ecog=False, fnirs=False, csd=False, dbs=False,
-                   temperature=False, gsr=False,
+                   temperature=False, gsr=False, eyetrack=False,
                    include=(), exclude='bads', selection=None, verbose=None):
         """Pick some channels by type and names.
 
@@ -623,7 +623,7 @@ class UpdateChannelsMixin(object):
             ias=ias, syst=syst, seeg=seeg, dipole=dipole, gof=gof, bio=bio,
             ecog=ecog, fnirs=fnirs, csd=csd, dbs=dbs, include=include,
             exclude=exclude, selection=selection, temperature=temperature,
-            gsr=gsr)
+            gsr=gsr, eyetrack=eyetrack)
 
         self._pick_drop_channels(idx)
 
