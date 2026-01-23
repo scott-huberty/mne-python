@@ -14,7 +14,7 @@ import eeglabio.epochs  # noqa: E402
 import eeglabio.raw  # noqa: E402
 
 
-def _export_raw(fname, raw):
+def _export_raw(fname, raw, *, ica=None):
     # load data first
     raw.load_data()
 
@@ -37,6 +37,22 @@ def _export_raw(fname, raw):
         ]
     else:
         annotations = None
+
+    kwargs = dict()
+    have_kwargs = getfullargspec(eeglabio.raw.export_set).kwonlyargs
+    if ica is not None:
+        if "icaweights" in have_kwargs:
+            icaweights, icasphere, icawinv = _mne_ica_to_eeglab(ica)
+            kwargs["icaweights"] = icaweights
+            kwargs["icasphere"] = icasphere
+            kwargs["icawinv"] = icawinv
+        else:
+            # TODO: confirm that 0.1.4 is the correct pin before merge
+            raise RuntimeError(
+                "To export ICA to eeglab format, eeglabio version 0.1.4 is required. "
+                f"You have version {eeglabio.__version__}"
+            )
+
     eeglabio.raw.export_set(
         fname,
         data=raw.get_data(picks=ch_names),
@@ -44,10 +60,11 @@ def _export_raw(fname, raw):
         ch_names=ch_names,
         ch_locs=cart_coords,
         annotations=annotations,
+        **kwargs,
     )
 
 
-def _export_epochs(fname, epochs):
+def _export_epochs(fname, epochs, *, ica=None):
     _check_eeglabio_installed()
     # load data first
     epochs.load_data()
@@ -68,8 +85,21 @@ def _export_epochs(fname, epochs):
 
     # https://github.com/jackz314/eeglabio/pull/18
     kwargs = dict()
-    if "epoch_indices" in getfullargspec(eeglabio.epochs.export_set).kwonlyargs:
+    have_kwargs = getfullargspec(eeglabio.epochs.export_set).kwonlyargs
+    if "epoch_indices" in have_kwargs:
         kwargs["epoch_indices"] = epochs.selection
+    if ica is not None:
+        if "icaweights" in have_kwargs:
+            icaweights, icasphere, icawinv = _mne_ica_to_eeglab(ica)
+            kwargs["icaweights"] = icaweights
+            kwargs["icasphere"] = icasphere
+            kwargs["icawinv"] = icawinv
+        else:
+            # TODO: confirm that 0.1.4 is the correct pin before merge
+            raise RuntimeError(
+                "To export ICA to eeglab format, eeglabio version 0.1.4 is required. "
+                f"You have version {eeglabio.__version__}"
+            )
 
     eeglabio.epochs.export_set(
         fname,
@@ -84,6 +114,24 @@ def _export_epochs(fname, epochs):
         annotations=annot,
         **kwargs,
     )
+
+
+def _mne_ica_to_eeglab(ica):
+    n_comp = ica.n_components_
+    n_ch = len(ica.ch_names)
+    pre_whitener = ica.pre_whitener_
+    if pre_whitener.shape == (n_ch, 1):
+        pre_whitener = np.diag(pre_whitener[:, 0])
+    elif pre_whitener.shape != (n_ch, n_ch):
+        raise RuntimeError()
+
+    P = ica.pca_components_[:n_comp, :]
+    icasphere = P @ pre_whitener
+    icaweights = ica.unmixing_matrix_
+
+    W_mne = icaweights @ icasphere
+    icawinv = np.linalg.pinv(W_mne)
+    return icaweights, icasphere, icawinv
 
 
 def _get_als_coords_from_chs(chs, drop_chs=None):

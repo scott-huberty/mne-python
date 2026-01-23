@@ -16,6 +16,7 @@ def export_raw(
     physical_range="auto",
     add_ch_type=False,
     *,
+    export_params=None,
     overwrite=False,
     verbose=None,
 ):
@@ -54,6 +55,8 @@ def export_raw(
     %(export_eeglab_note)s
     %(export_edf_note)s
     """
+    if export_params is None:
+        export_params = {}
     fname = str(_check_fname(fname, overwrite=overwrite))
     supported_export_formats = {  # format : (extensions,)
         "bdf": ("bdf",),
@@ -90,11 +93,13 @@ def export_raw(
         case "eeglab":
             from mne.export._eeglab import _export_raw
 
-            _export_raw(fname, raw)
+            _export_raw(fname, raw, **export_params)
 
 
 @verbose
-def export_epochs(fname, epochs, fmt="auto", *, overwrite=False, verbose=None):
+def export_epochs(
+    fname, epochs, fmt="auto", *, export_params=None, overwrite=False, verbose=None
+):
     """Export Epochs to external formats.
 
     %(export_fmt_support_epochs)s
@@ -119,6 +124,8 @@ def export_epochs(fname, epochs, fmt="auto", *, overwrite=False, verbose=None):
     %(export_warning_note_epochs)s
     %(export_eeglab_note)s
     """
+    if export_params is None:
+        export_params = {}
     fname = str(_check_fname(fname, overwrite=overwrite))
     supported_export_formats = {
         "eeglab": ("set",),
@@ -135,7 +142,7 @@ def export_epochs(fname, epochs, fmt="auto", *, overwrite=False, verbose=None):
     if fmt == "eeglab":
         from mne.export._eeglab import _export_epochs
 
-        _export_epochs(fname, epochs)
+        _export_epochs(fname, epochs, **export_params)
 
 
 @verbose
