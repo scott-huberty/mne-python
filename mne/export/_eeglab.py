@@ -46,6 +46,7 @@ def _export_raw(fname, raw, *, ica=None):
             kwargs["icaweights"] = icaweights
             kwargs["icasphere"] = icasphere
             kwargs["icawinv"] = icawinv
+            kwargs["bads"] = raw.info["bads"]
         else:
             # TODO: confirm that 0.1.4 is the correct pin before merge
             raise RuntimeError(
@@ -94,6 +95,7 @@ def _export_epochs(fname, epochs, *, ica=None):
             kwargs["icaweights"] = icaweights
             kwargs["icasphere"] = icasphere
             kwargs["icawinv"] = icawinv
+            kwargs["bads"] = epochs.info["bads"]
         else:
             # TODO: confirm that 0.1.4 is the correct pin before merge
             raise RuntimeError(
